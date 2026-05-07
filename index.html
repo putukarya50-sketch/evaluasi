@@ -29,65 +29,116 @@ body{
 
 .option:hover{
     transform:scale(1.02);
-}
-
-.correct{
-    background:#22c55e !important;
-}
-
-.wrong{
-    background:#ef4444 !important;
+    background:#334155;
 }
 
 </style>
 </head>
 
-<body class="min-h-screen p-5">
+<body class="min-h-screen flex items-center justify-center p-5">
 
-<div class="max-w-5xl mx-auto">
+<div class="max-w-4xl w-full">
 
-    <h1 class="text-4xl font-bold text-center text-cyan-300 mb-2">
-        Evaluasi Gelombang Bunyi
-    </h1>
+    <!-- QUIZ -->
 
-    <p class="text-center text-slate-300 mb-8">
-        Materi: Gelombang Bunyi dan Efek Doppler
-    </p>
+    <div class="card" id="quizBox">
 
-    <div id="quizContainer" class="space-y-6"></div>
+        <h1 class="text-4xl font-bold text-center text-cyan-300 mb-2">
+            Evaluasi Gelombang Bunyi
+        </h1>
 
-    <div class="text-center mt-8">
+        <p class="text-center text-slate-300 mb-8">
+            Materi: Gelombang Bunyi dan Efek Doppler
+        </p>
 
-        <button
-            id="checkBtn"
-            class="bg-cyan-400 text-black px-6 py-3 rounded-xl font-bold text-lg hover:scale-105 transition"
+        <!-- Progress -->
+
+        <div class="flex justify-between items-center mb-6">
+
+            <span
+                id="nomorSoal"
+                class="bg-cyan-400 text-black px-4 py-1 rounded-full font-bold"
+            >
+                Soal 1
+            </span>
+
+            <span
+                id="progressText"
+                class="text-slate-300"
+            >
+                1 / 5
+            </span>
+
+        </div>
+
+        <!-- Pertanyaan -->
+
+        <h2
+            id="pertanyaan"
+            class="text-2xl font-bold mb-6 leading-relaxed"
         >
-            Periksa Jawaban
-        </button>
+        </h2>
+
+        <!-- Pilihan -->
+
+        <div
+            id="pilihanContainer"
+            class="space-y-4"
+        >
+        </div>
+
+        <!-- Tombol -->
+
+        <div class="flex justify-between mt-8">
+
+            <button
+                id="prevBtn"
+                class="bg-slate-700 px-6 py-3 rounded-xl font-bold"
+            >
+                ⬅ Previous
+            </button>
+
+            <button
+                id="nextBtn"
+                class="bg-cyan-400 text-black px-6 py-3 rounded-xl font-bold"
+            >
+                Next ➜
+            </button>
+
+        </div>
 
     </div>
 
+    <!-- HASIL -->
+
     <div
-        id="resultBox"
-        class="hidden mt-8 card text-center"
+        id="hasilBox"
+        class="hidden card text-center"
     >
 
-        <h2 class="text-3xl font-bold text-cyan-300 mb-4">
+        <h2 class="text-4xl font-bold text-cyan-300 mb-4">
             Hasil Evaluasi
         </h2>
 
         <p
-            id="scoreText"
-            class="text-2xl font-bold"
+            id="nilaiText"
+            class="text-6xl font-bold mb-4"
         >
-            Skor: 0
+            100
         </p>
 
         <p
-            id="messageText"
-            class="mt-4 text-slate-300"
+            id="pesanText"
+            class="text-xl text-slate-300"
         >
         </p>
+
+        <button
+            onclick="location.reload()"
+            class="mt-8 bg-cyan-400 text-black px-6 py-3 rounded-xl font-bold"
+        >
+            Ulangi Quiz
+        </button>
 
     </div>
 
@@ -169,129 +220,178 @@ const soal = [
 
 ];
 
-const container =
+let indexSoal = 0;
+
+let jawabanUser = [];
+
+const pertanyaan =
+document.getElementById("pertanyaan");
+
+const pilihanContainer =
+document.getElementById("pilihanContainer");
+
+function tampilkanSoal(){
+
+    let s = soal[indexSoal];
+
     document.getElementById(
-        "quizContainer"
-    );
+        "nomorSoal"
+    ).innerText =
+    "Soal " + (indexSoal + 1);
 
-soal.forEach((s,index)=>{
+    document.getElementById(
+        "progressText"
+    ).innerText =
+    (indexSoal + 1) + " / " + soal.length;
 
-    const card =
-        document.createElement("div");
+    pertanyaan.innerText =
+    s.pertanyaan;
 
-    card.className = "card";
-
-    let html = `
-
-        <h2 class="text-xl font-bold mb-5 leading-relaxed">
-            ${s.pertanyaan}
-        </h2>
-
-        <div class="space-y-3">
-
-    `;
+    pilihanContainer.innerHTML = "";
 
     s.pilihan.forEach((p,i)=>{
 
-        html += `
+        let label =
+        document.createElement("label");
 
-            <label
-                class="option block bg-slate-700 p-4 rounded-xl cursor-pointer"
+        label.className =
+        "option block bg-slate-700 p-4 rounded-xl cursor-pointer";
+
+        label.innerHTML = `
+
+            <input
+                type="radio"
+                name="jawaban"
+                value="${i}"
+                class="mr-3"
             >
 
-                <input
-                    type="radio"
-                    name="soal${index}"
-                    value="${i}"
-                    class="mr-3"
-                >
-
-                ${p}
-
-            </label>
+            ${p}
 
         `;
+
+        pilihanContainer.appendChild(label);
+
+        const radio =
+        label.querySelector("input");
+
+        if(jawabanUser[indexSoal] == i){
+
+            radio.checked = true;
+        }
+
+        radio.addEventListener("change",()=>{
+
+            jawabanUser[indexSoal] = i;
+        });
     });
 
-    html += `</div>`;
+    // Tombol previous
 
-    card.innerHTML = html;
+    document.getElementById(
+        "prevBtn"
+    ).style.visibility =
+    indexSoal === 0
+    ? "hidden"
+    : "visible";
 
-    container.appendChild(card);
+    // Tombol next
+
+    document.getElementById(
+        "nextBtn"
+    ).innerText =
+    indexSoal === soal.length - 1
+    ? "Selesai"
+    : "Next ➜";
+}
+
+tampilkanSoal();
+
+
+// NEXT
+
+document.getElementById(
+    "nextBtn"
+).addEventListener("click",()=>{
+
+    if(
+        jawabanUser[indexSoal]
+        === undefined
+    ){
+
+        alert(
+            "Silakan pilih jawaban terlebih dahulu!"
+        );
+
+        return;
+    }
+
+    if(indexSoal < soal.length - 1){
+
+        indexSoal++;
+
+        tampilkanSoal();
+
+    }else{
+
+        tampilkanHasil();
+    }
 });
 
-document.getElementById("checkBtn")
-.addEventListener("click",()=>{
+
+// PREVIOUS
+
+document.getElementById(
+    "prevBtn"
+).addEventListener("click",()=>{
+
+    if(indexSoal > 0){
+
+        indexSoal--;
+
+        tampilkanSoal();
+    }
+});
+
+
+// HASIL
+
+function tampilkanHasil(){
 
     let skor = 0;
 
-    soal.forEach((s,index)=>{
+    soal.forEach((s,i)=>{
 
-        const jawaban =
-            document.querySelector(
-                `input[name="soal${index}"]:checked`
-            );
+        if(jawabanUser[i] === s.jawaban){
 
-        const labels =
-            document.querySelectorAll(
-                `input[name="soal${index}"]`
-            );
-
-        labels.forEach(l=>{
-
-            l.parentElement.classList.remove(
-                "correct",
-                "wrong"
-            );
-        });
-
-        if(jawaban){
-
-            const nilai =
-                Number(jawaban.value);
-
-            if(nilai === s.jawaban){
-
-                skor += 20;
-
-                jawaban.parentElement
-                    .classList.add("correct");
-
-            }else{
-
-                jawaban.parentElement
-                    .classList.add("wrong");
-
-                labels[s.jawaban]
-                    .parentElement
-                    .classList.add("correct");
-            }
+            skor += 20;
         }
     });
 
-    const hasil =
-        document.getElementById(
-            "resultBox"
-        );
-
-    hasil.classList.remove("hidden");
+    document.getElementById(
+        "quizBox"
+    ).classList.add("hidden");
 
     document.getElementById(
-        "scoreText"
+        "hasilBox"
+    ).classList.remove("hidden");
+
+    document.getElementById(
+        "nilaiText"
     ).innerText =
-        "Skor: " + skor;
+    skor;
 
     let pesan = "";
 
     if(skor === 100){
 
         pesan =
-        "Luar biasa! Pemahaman konsep gelombang bunyi sangat baik.";
+        "Luar biasa! Semua jawaban benar.";
 
     }else if(skor >= 80){
 
         pesan =
-        "Bagus! Sebagian besar konsep sudah dipahami.";
+        "Bagus! Pemahamanmu sangat baik.";
 
     }else if(skor >= 60){
 
@@ -301,20 +401,13 @@ document.getElementById("checkBtn")
     }else{
 
         pesan =
-        "Ayo pelajari kembali materi gelombang bunyi.";
+        "Ayo belajar lagi agar lebih memahami materi.";
     }
 
     document.getElementById(
-        "messageText"
+        "pesanText"
     ).innerText = pesan;
-
-    window.scrollTo({
-
-        top:document.body.scrollHeight,
-
-        behavior:"smooth"
-    });
-});
+}
 
 </script>
 
