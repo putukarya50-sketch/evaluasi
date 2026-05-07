@@ -11,7 +11,7 @@
 <style>
 
 body{
-    font-family: Arial, sans-serif;
+    font-family:Arial, sans-serif;
     background:#0f172a;
     color:white;
 }
@@ -44,14 +44,14 @@ body{
 
 <body class="min-h-screen p-5">
 
-<div class="max-w-4xl mx-auto">
+<div class="max-w-5xl mx-auto">
 
     <h1 class="text-4xl font-bold text-center text-cyan-300 mb-2">
         Evaluasi Gelombang Bunyi
     </h1>
 
     <p class="text-center text-slate-300 mb-8">
-        Pilih jawaban yang paling benar
+        Materi: Gelombang Bunyi dan Efek Doppler
     </p>
 
     <div id="quizContainer" class="space-y-6"></div>
@@ -99,13 +99,13 @@ const soal = [
 
 {
     pertanyaan:
-    "1. Gelombang bunyi termasuk jenis gelombang ...",
+    "1. Mengapa gelombang bunyi tidak dapat merambat di ruang hampa?",
 
     pilihan:[
-        "Elektromagnetik",
-        "Mekanik",
-        "Transversal",
-        "Cahaya"
+        "Karena bunyi membutuhkan cahaya",
+        "Karena bunyi termasuk gelombang mekanik yang membutuhkan medium",
+        "Karena bunyi hanya dapat merambat di udara",
+        "Karena bunyi memiliki frekuensi kecil"
     ],
 
     jawaban:1
@@ -113,13 +113,27 @@ const soal = [
 
 {
     pertanyaan:
-    "2. Satuan frekuensi adalah ...",
+    "2. Seorang siswa mendengar bunyi dengan frekuensi 680 Hz. Jika cepat rambat bunyi di udara 340 m/s, maka panjang gelombangnya adalah ...",
 
     pilihan:[
-        "Meter",
-        "Sekon",
-        "Hertz",
-        "Newton"
+        "0,5 m",
+        "1 m",
+        "2 m",
+        "4 m"
+    ],
+
+    jawaban:0
+},
+
+{
+    pertanyaan:
+    "3. Ketika gitar dipetik semakin kuat, maka yang bertambah adalah ...",
+
+    pilihan:[
+        "Frekuensi bunyi",
+        "Cepat rambat bunyi",
+        "Amplitudo bunyi",
+        "Panjang gelombang"
     ],
 
     jawaban:2
@@ -127,27 +141,13 @@ const soal = [
 
 {
     pertanyaan:
-    "3. Bunyi tidak dapat merambat di ...",
+    "4. Sebuah ambulans bergerak mendekati pengamat sambil membunyikan sirine. Pengamat akan mendengar frekuensi yang ...",
 
     pilihan:[
-        "Udara",
-        "Air",
-        "Besi",
-        "Ruang hampa"
-    ],
-
-    jawaban:3
-},
-
-{
-    pertanyaan:
-    "4. Semakin besar frekuensi bunyi maka nada terdengar semakin ...",
-
-    pilihan:[
-        "Rendah",
-        "Lemah",
-        "Tinggi",
-        "Pelan"
+        "Lebih rendah dari frekuensi asli",
+        "Tetap sama",
+        "Lebih tinggi dari frekuensi asli",
+        "Tidak dapat didengar"
     ],
 
     jawaban:2
@@ -155,16 +155,16 @@ const soal = [
 
 {
     pertanyaan:
-    "5. Cepat rambat bunyi di udara sekitar ...",
+    "5. Bunyi pantul yang terdengar setelah bunyi asli selesai disebut ...",
 
     pilihan:[
-        "34 m/s",
-        "340 m/s",
-        "3000 m/s",
-        "3 m/s"
+        "Resonansi",
+        "Gaung",
+        "Gema",
+        "Interferensi"
     ],
 
-    jawaban:1
+    jawaban:2
 }
 
 ];
@@ -183,7 +183,7 @@ soal.forEach((s,index)=>{
 
     let html = `
 
-        <h2 class="text-xl font-bold mb-5">
+        <h2 class="text-xl font-bold mb-5 leading-relaxed">
             ${s.pertanyaan}
         </h2>
 
@@ -286,17 +286,22 @@ document.getElementById("checkBtn")
     if(skor === 100){
 
         pesan =
-        "Luar biasa! Semua jawaban benar.";
+        "Luar biasa! Pemahaman konsep gelombang bunyi sangat baik.";
+
+    }else if(skor >= 80){
+
+        pesan =
+        "Bagus! Sebagian besar konsep sudah dipahami.";
 
     }else if(skor >= 60){
 
         pesan =
-        "Bagus! Pemahaman sudah cukup baik.";
+        "Cukup baik, tetapi masih perlu latihan.";
 
     }else{
 
         pesan =
-        "Tetap semangat belajar lagi.";
+        "Ayo pelajari kembali materi gelombang bunyi.";
     }
 
     document.getElementById(
