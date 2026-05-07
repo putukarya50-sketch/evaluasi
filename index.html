@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Evaluasi Gelombang Bunyi</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#0f172a;
+    color:white;
+}
+
+.card{
+    background:#1e293b;
+    border-radius:20px;
+    padding:25px;
+    border:1px solid #334155;
+}
+
+.option{
+    transition:0.2s;
+}
+
+.option:hover{
+    transform:scale(1.02);
+}
+
+.correct{
+    background:#22c55e !important;
+}
+
+.wrong{
+    background:#ef4444 !important;
+}
+
+</style>
+</head>
+
+<body class="min-h-screen p-5">
+
+<div class="max-w-4xl mx-auto">
+
+    <h1 class="text-4xl font-bold text-center text-cyan-300 mb-2">
+        Evaluasi Gelombang Bunyi
+    </h1>
+
+    <p class="text-center text-slate-300 mb-8">
+        Pilih jawaban yang paling benar
+    </p>
+
+    <div id="quizContainer" class="space-y-6"></div>
+
+    <div class="text-center mt-8">
+
+        <button
+            id="checkBtn"
+            class="bg-cyan-400 text-black px-6 py-3 rounded-xl font-bold text-lg hover:scale-105 transition"
+        >
+            Periksa Jawaban
+        </button>
+
+    </div>
+
+    <div
+        id="resultBox"
+        class="hidden mt-8 card text-center"
+    >
+
+        <h2 class="text-3xl font-bold text-cyan-300 mb-4">
+            Hasil Evaluasi
+        </h2>
+
+        <p
+            id="scoreText"
+            class="text-2xl font-bold"
+        >
+            Skor: 0
+        </p>
+
+        <p
+            id="messageText"
+            class="mt-4 text-slate-300"
+        >
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+
+const soal = [
+
+{
+    pertanyaan:
+    "1. Gelombang bunyi termasuk jenis gelombang ...",
+
+    pilihan:[
+        "Elektromagnetik",
+        "Mekanik",
+        "Transversal",
+        "Cahaya"
+    ],
+
+    jawaban:1
+},
+
+{
+    pertanyaan:
+    "2. Satuan frekuensi adalah ...",
+
+    pilihan:[
+        "Meter",
+        "Sekon",
+        "Hertz",
+        "Newton"
+    ],
+
+    jawaban:2
+},
+
+{
+    pertanyaan:
+    "3. Bunyi tidak dapat merambat di ...",
+
+    pilihan:[
+        "Udara",
+        "Air",
+        "Besi",
+        "Ruang hampa"
+    ],
+
+    jawaban:3
+},
+
+{
+    pertanyaan:
+    "4. Semakin besar frekuensi bunyi maka nada terdengar semakin ...",
+
+    pilihan:[
+        "Rendah",
+        "Lemah",
+        "Tinggi",
+        "Pelan"
+    ],
+
+    jawaban:2
+},
+
+{
+    pertanyaan:
+    "5. Cepat rambat bunyi di udara sekitar ...",
+
+    pilihan:[
+        "34 m/s",
+        "340 m/s",
+        "3000 m/s",
+        "3 m/s"
+    ],
+
+    jawaban:1
+}
+
+];
+
+const container =
+    document.getElementById(
+        "quizContainer"
+    );
+
+soal.forEach((s,index)=>{
+
+    const card =
+        document.createElement("div");
+
+    card.className = "card";
+
+    let html = `
+
+        <h2 class="text-xl font-bold mb-5">
+            ${s.pertanyaan}
+        </h2>
+
+        <div class="space-y-3">
+
+    `;
+
+    s.pilihan.forEach((p,i)=>{
+
+        html += `
+
+            <label
+                class="option block bg-slate-700 p-4 rounded-xl cursor-pointer"
+            >
+
+                <input
+                    type="radio"
+                    name="soal${index}"
+                    value="${i}"
+                    class="mr-3"
+                >
+
+                ${p}
+
+            </label>
+
+        `;
+    });
+
+    html += `</div>`;
+
+    card.innerHTML = html;
+
+    container.appendChild(card);
+});
+
+document.getElementById("checkBtn")
+.addEventListener("click",()=>{
+
+    let skor = 0;
+
+    soal.forEach((s,index)=>{
+
+        const jawaban =
+            document.querySelector(
+                `input[name="soal${index}"]:checked`
+            );
+
+        const labels =
+            document.querySelectorAll(
+                `input[name="soal${index}"]`
+            );
+
+        labels.forEach(l=>{
+
+            l.parentElement.classList.remove(
+                "correct",
+                "wrong"
+            );
+        });
+
+        if(jawaban){
+
+            const nilai =
+                Number(jawaban.value);
+
+            if(nilai === s.jawaban){
+
+                skor += 20;
+
+                jawaban.parentElement
+                    .classList.add("correct");
+
+            }else{
+
+                jawaban.parentElement
+                    .classList.add("wrong");
+
+                labels[s.jawaban]
+                    .parentElement
+                    .classList.add("correct");
+            }
+        }
+    });
+
+    const hasil =
+        document.getElementById(
+            "resultBox"
+        );
+
+    hasil.classList.remove("hidden");
+
+    document.getElementById(
+        "scoreText"
+    ).innerText =
+        "Skor: " + skor;
+
+    let pesan = "";
+
+    if(skor === 100){
+
+        pesan =
+        "Luar biasa! Semua jawaban benar.";
+
+    }else if(skor >= 60){
+
+        pesan =
+        "Bagus! Pemahaman sudah cukup baik.";
+
+    }else{
+
+        pesan =
+        "Tetap semangat belajar lagi.";
+    }
+
+    document.getElementById(
+        "messageText"
+    ).innerText = pesan;
+
+    window.scrollTo({
+
+        top:document.body.scrollHeight,
+
+        behavior:"smooth"
+    });
+});
+
+</script>
+
+</body>
+</html>
